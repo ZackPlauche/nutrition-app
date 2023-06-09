@@ -1,26 +1,26 @@
 """Command line interface for the nutrition tracking app."""
-from db import Food, Entry
+from db.models import Food, Entry
 from utils import pad
 
 
-print(pad('Nutrition App', '=', 10))
-
 def main():
+    print(pad('Nutrition App', '=', 10))
     options = {
-        'Add Entries': Entry.add_entries,
-        'View Today\'s Report': Entry.show_todays_entries_and_totals,
         'Add Foods': Food.add_foods,
         'Show Foods': Food.display_foods,
-        'Update Foods': Food.update_foods,
+        'Edit Foods': Food.update_foods,
+        'Add Entries': Entry.add_entries,
+        'Preview Entry': Entry.preview_entry,
+        'View Today\'s Totals': Entry.show_todays_entries_and_totals,
+        'Show Entries': Entry.show_entries,
         'Delete Foods': Food.delete_foods,
         'Delete Entries': Entry.delete_entries,
-        'Show Entries': Entry.show_entries,
         'Exit': exit,
     }
 
     while True:
         print()
-        for i, (option, _) in enumerate(options.items(), start=1):
+        for i, option in enumerate(options.keys(), start=1):
             print(f'{i}) {option}')
         print()
         choice = input('Choice: ')
@@ -30,8 +30,8 @@ def main():
             print('Invalid choice. Enter a number.')
         else:
             if choice in range(1, len(options) + 1):
-                _, func = list(options.items())[choice - 1]
                 print()
+                func = list(options.values())[choice - 1]
                 func()
             else:
                 print('Invalid choice. Enter a number.')

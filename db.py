@@ -76,19 +76,21 @@ class BaseModel(Base):
 
     
 class Food(BaseModel):
+    """A food item that will be selected to calculate nutritional value in a meal."""
     __tablename__ = 'food'
 
     name = Column(String(50), nullable=False, unique=True)
-    calories = Column(Float, nullable=False, comment="per 100g")
-    protein = Column(Float, nullable=False, comment="per 100g")
-    fat = Column(Float, nullable=False, comment="per 100g")
-    carbs = Column(Float, nullable=False, comment="per 100g")
+    weight = Column(Float, nullable=True, default=100)
+    calories = Column(Float, nullable=False)
+    protein = Column(Float, nullable=False)
+    fat = Column(Float, nullable=False)
+    carbs = Column(Float, nullable=False)
     source = Column(String(50), nullable=True, default=None)
 
     def __str__(self):
         return NUTRITION_TEMPLATE.format(
             food_name=self.name,
-            weight=100,
+            weight=self.weight,
             calories=self.calories,
             protein=self.protein,
             fat=self.fat,
@@ -109,13 +111,15 @@ class Food(BaseModel):
         return Food(name=name, calories=calories, protein=protein, fat=fat, carbs=carbs)
     
     def calculate(self, weight):
-        """Calculate the nutritional value of a food item based on the weight given."""
+        """Calculate the nutritional value of a food item based on the weight given with respect to the food's weight."""
+        factor = weight / self.weight
         return {
-            'calories': self.calories * weight / 100,
-            'protein': self.protein * weight / 100,
-            'fat': self.fat * weight / 100,
-            'carbs': self.carbs * weight / 100,
+            'calories': self.calories * factor,
+            'protein': self.protein * factor,
+            'fat': self.fat * factor,
+            'carbs': self.carbs * factor,
         }
+
 
     @staticmethod
     def select():
@@ -127,6 +131,7 @@ class Food(BaseModel):
     @staticmethod
     def add_foods():
         """Add a food item or multiple to the database."""
+        display_title('Adding Food Items')
         while True:
             food = Food.from_input()
             food.save()

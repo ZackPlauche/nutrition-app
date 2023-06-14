@@ -68,7 +68,7 @@ class Goal(BaseModel):
     @staticmethod
     def display_goals():
         """Display all goals."""
-        goals = Goal.query().all()
+        goals = Goal.query().sort_by().all()
         
         print()
 

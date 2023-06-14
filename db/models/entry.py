@@ -49,7 +49,7 @@ class Entry(BaseModel):
         print(f'Food: {food.name}')
         weight = float(input('Weight (g): '))
         if not date:
-            date_str = input('Date (YYYY-MM-DD) (Press enter for today): ')
+            date_str = input(f'Date (YYYY-MM-DD) (Press enter for {datetime.now().date()}): ')
             if not date_str:
                 date = datetime.now().date()
             else:
@@ -96,7 +96,7 @@ class Entry(BaseModel):
 
     @staticmethod
     def show_entries(date=None):
-        """Show all entries for today."""
+        """Show entries for the given date."""
         entries = Entry.query()
         if entries.count() == 0:
             print('No entries to show.')
@@ -107,8 +107,13 @@ class Entry(BaseModel):
                 entries = entries.filter(Entry.date == date)
                 print()
                 break
+        else:
+            entries = entries.filter(Entry.date == date)
         entries = entries.order_by(Entry.submitted_at.asc()).all()
         display_title(f'Entries for {date}')
+        if len(entries) == 0:
+            print('No entries to show.')
+            return
         display_list(entries, symbol='.')
 
     @staticmethod
@@ -159,7 +164,7 @@ class Entry(BaseModel):
         ))
 
     @staticmethod
-    def show_entries_and_totals(date=None):
+    def show_entries_and_totals(date: datetime.date =None):
         """Show all entries for a specific day and the total nutritional value."""
         if not date:
             date = datetime.strptime(input('Date (YYYY-MM-DD): '), '%Y-%m-%d').date()

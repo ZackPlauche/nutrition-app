@@ -6,15 +6,15 @@ from utils import pad
 def main():
     print(pad('Nutrition App', '=', 10))
     options = {
+        'Add Entry': Entry.add_entries,
+        'View Today\'s Totals': Entry.show_todays_entries_and_totals,
+        'Preview Entry': Entry.preview_entry,
+        'Show Entries': Entry.show_entries,
+        'Delete Entries': Entry.delete_entries,
         'Add Foods': Food.add_foods,
         'Show Foods': Food.display_foods,
         'Edit Foods': Food.update_foods,
-        'Add Entries': Entry.add_entries,
-        'Preview Entry': Entry.preview_entry,
-        'View Today\'s Totals': Entry.show_todays_entries_and_totals,
-        'Show Entries': Entry.show_entries,
         'Delete Foods': Food.delete_foods,
-        'Delete Entries': Entry.delete_entries,
         'Exit': exit,
     }
 
